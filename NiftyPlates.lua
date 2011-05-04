@@ -72,6 +72,7 @@ local updateNamePlates = function (frame)
 	frame.highlight:SetAllPoints(frame.hb)
 	
 	frame.level:Hide()
+	frame.oldname:Hide()
 end
 
 local styleNamePlate = function (frame) 
@@ -82,11 +83,8 @@ local styleNamePlate = function (frame)
 	frame.isStyled = true
 	frame.hb = hb
 	frame.cb = cb
-	
-	hb:HookScript("OnShow", updateNamePlates)
-	
---	nameTextRegion:Hide()
-
+	frame.level = levelTextRegion
+		
 	local name = hb:CreateFontString()
 	name:SetPoint("LEFT", hb, "LEFT", 0, 0)
 	name:SetJustifyH("LEFT") 
@@ -98,8 +96,6 @@ local styleNamePlate = function (frame)
 	frame.oldname = nameTextRegion
 	frame.name = name
 	
-	frame.level = levelTextRegion
-	
 	local health = hb:CreateFontString()
 	health:SetPoint("RIGHT", hb, "RIGHT", 0, 0)
 	health:SetFont(font, fontSize, fontOutline)
@@ -107,12 +103,6 @@ local styleNamePlate = function (frame)
 	health:SetJustifyV("MIDDLE") 
 	health:SetJustifyH("RIGHT")
 	frame.health = health
-	
-
-	hb:SetScript("OnValueChanged", updateHealth)
-	updateHealth(hb, hb:GetValue())
-
-	frame.oldname:Hide()
 	
 	local glow = hb:CreateTexture(nil, "BORDER")
 	glow:SetPoint("TOPLEFT", hb, "TOPLEFT", -2, 2)
@@ -131,11 +121,9 @@ local styleNamePlate = function (frame)
 	bg:SetVertexColor(0.15, 0.15, 0.15)
 	frame.bg = bg
 	
-	
 	highlightRegion:SetTexture(barTexture)
 	highlightRegion:SetVertexColor(0.25, 0.25, 0.25)
-	frame.highlight = highlightRegion	
-	
+	frame.highlight = highlightRegion
 	
 	nativeGlowRegion:SetTexture(nil)
 	overlayRegion:SetTexture(nil)
@@ -144,6 +132,10 @@ local styleNamePlate = function (frame)
 	stateIconRegion:SetTexture(nil)
 	bossIconRegion:SetTexture(nil)
 	
+	hb:HookScript("OnShow", updateNamePlates)
+	hb:SetScript("OnValueChanged", updateHealth)
+	
+	updateHealth(hb, hb:GetValue())
 	updateNamePlates(hb)
 end
 
