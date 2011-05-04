@@ -19,6 +19,15 @@ do
 	end
 end
 
+local shortenValue = function (val)
+	if val < 1000 then
+		return num
+	elseif val > 1000000 then
+		return string.format("%.1fm", val / 1000000)
+	else
+		return string.format("%.1fk", val / 1000)
+	end
+end
 
 local getUnitThreatValue = function (region)
 	if not region:IsShown() then
@@ -50,6 +59,10 @@ local updateThreat = function (frame)
 	frame.glow:Show()
 end
 
+local updateHealth = function (frame, value)
+	frame:GetParent().health:SetText( shortenValue(value) )
+end
+
 local updateNamePlates = function (frame)
 	frame = frame:GetParent()
 	
@@ -57,6 +70,8 @@ local updateNamePlates = function (frame)
 	
 	frame.highlight:ClearAllPoints()
 	frame.highlight:SetAllPoints(frame.hb)
+	
+	frame.level:Hide()
 end
 
 local styleNamePlate = function (frame) 
@@ -73,26 +88,30 @@ local styleNamePlate = function (frame)
 --	nameTextRegion:Hide()
 
 	local name = hb:CreateFontString()
-	name:SetPoint("LEFT", hb, "LEFT", 0, 1)
+	name:SetPoint("LEFT", hb, "LEFT", 0, 0)
 	name:SetJustifyH("LEFT") 
 	name:SetJustifyV("MIDDLE") 
 	name:SetWidth(120 * .9)
-	name:SetHeight(11)
 	name:SetFont(font, fontSize, fontOutline)
 	name:SetTextColor(1, 1, 1)
 	name:SetShadowOffset(0, 0)
 	frame.oldname = nameTextRegion
 	frame.name = name
 	
-	-- @Todo: Health update function
+	frame.level = levelTextRegion
+	
 	local health = hb:CreateFontString()
-	health:SetPoint("LEFT", hb, "LEFT", 0, 1)
+	health:SetPoint("RIGHT", hb, "RIGHT", 0, 0)
 	health:SetFont(font, fontSize, fontOutline)
 	health:SetShadowOffset(0, 0)
 	health:SetJustifyV("MIDDLE") 
-	health:SetHeight(11)
+	health:SetJustifyH("RIGHT")
 	frame.health = health
 	
+
+	hb:SetScript("OnValueChanged", updateHealth)
+	updateHealth(hb, hb:GetValue())
+
 	frame.oldname:Hide()
 	
 	local glow = hb:CreateTexture(nil, "BORDER")
