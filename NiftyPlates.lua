@@ -1,8 +1,8 @@
 local addon, NiftyPlates = ...
 
-local font, fontSize, fontOutline = [=[Interface\Addons\kNamePlates\media\Calibri1.ttf]=], 9, "OUTLINE"
-local barTexture = [=[Interface\Addons\kNamePlates\media\Smoothv2]=]
-local glowTexture = [=[Interface\Addons\kNamePlates\media\Outline]=]
+local font, fontSize, fontOutline = [=[Interface\Addons\NiftyPlates\media\Calibri1.ttf]=], 9, "OUTLINE"
+local barTexture = [=[Interface\Addons\NiftyPlates\media\Smoothv2]=]
+local glowTexture = [=[Interface\Addons\NiftyPlates\media\Outline]=]
 local aggroColors = {
   --[0]		= { 1.00, 0.00, 0.00 },	-- "gray" equivalent (translate gray glow to red, the default hostile nameplate color; low aggro)
 	[1]		= { 0.00, 1.00, 1.00 },	-- "yellow" equivalent (tranlate glow to a bright cyan; you are at risk of pulling/losing aggro)
@@ -89,7 +89,7 @@ local styleNamePlate = function (frame)
 	frame.level = levelTextRegion
 		
 	local name = hb:CreateFontString()
-	name:SetPoint("LEFT", hb, "LEFT", 0, 0)
+	name:SetPoint("LEFT", hb, "LEFT", 1, 0)
 	name:SetJustifyH("LEFT") 
 	name:SetJustifyV("MIDDLE") 
 	name:SetWidth(120 * .9)
@@ -100,7 +100,7 @@ local styleNamePlate = function (frame)
 	frame.name = name
 	
 	local health = hb:CreateFontString()
-	health:SetPoint("RIGHT", hb, "RIGHT", 0, 0)
+	health:SetPoint("RIGHT", hb, "RIGHT", 1, 0)
 	health:SetFont(font, fontSize, fontOutline)
 	health:SetShadowOffset(0, 0)
 	health:SetJustifyV("MIDDLE") 
