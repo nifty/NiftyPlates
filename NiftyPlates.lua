@@ -23,7 +23,7 @@ end
 
 local shortenValue = function (val)
 	if val < 1000 then
-		return num
+		return val
 	elseif val > 1000000 then
 		return string.format("%.1fm", val / 1000000)
 	else
