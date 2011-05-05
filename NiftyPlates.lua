@@ -108,11 +108,12 @@ local styleNamePlate = function (frame)
 	frame.health = health
 	
 	local glow = hb:CreateTexture(nil, "BORDER")
-	glow:SetPoint("TOPLEFT", hb, "TOPLEFT", -2, 2)
-	glow:SetPoint("BOTTOMRIGHT", hb, "BOTTOMRIGHT", 2, -2)
+	glow:SetPoint("TOPLEFT", hb, "TOPLEFT", -1.5, 1.5)
+	glow:SetPoint("BOTTOMRIGHT", hb, "BOTTOMRIGHT", 1.5, -1.5)
 	glow:SetTexture(glowTexture)
 	glow:SetVertexColor(0, 0, 0)
-	glow:SetAlpha(1)
+	glow:SetAlpha(.75)
+	glow:SetBlendMode("ADD")
 	glow:Hide()
 	frame.glow = glow
 	frame.oldglow = nativeGlowRegion
