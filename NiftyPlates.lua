@@ -10,6 +10,8 @@ local aggroColors = {
 	[3]		= { 1.00, 0.67, 0.00 },	-- "red" equivalent (tranlate glow to a bright orange; this target is securely yours)
 }
 
+local namePlates = {}
+
 --[[ Utility functions ]]--
 do
 	local f = CreateFrame("Frame")
@@ -80,6 +82,7 @@ local styleNamePlate = function (frame)
 	local nativeGlowRegion, overlayRegion, highlightRegion, nameTextRegion, levelTextRegion, bossIconRegion, raidIconRegion, stateIconRegion = frame:GetRegions()
 	local castBarRegion, castBarOverlayRegion, castBarShieldRegion, spellIconRegion = cb:GetRegions()
 	
+	namePlates[ frame ] = true
 	frame.isStyled = true
 	frame.hb = hb
 	frame.cb = cb
@@ -141,8 +144,7 @@ end
 
 local isNamePlate = function (frame)
 	local o = select(2, frame:GetRegions())
-	
-	frame.region = o
+
 	if not o or o:GetObjectType() ~= "Texture" or o:GetTexture() ~= "Interface\\Tooltips\\Nameplate-Border" then
 		return false 
     end
@@ -150,9 +152,20 @@ local isNamePlate = function (frame)
     return true
 end
 
-local findNamePlates
+local findNamePlates, hookFrames
 do
 	local lastUpdate = 0
+	local numChildren = -1
+	
+	hookFrames = function (frames)
+		for i = 1, numChildren do
+			local frame = select(i, WorldFrame:GetChildren())
+			
+			if isNamePlate(frame) and not frame.isStyled then
+				styleNamePlate(frame)
+			end
+		end	
+	end
 	
 	findNamePlates = function (self, elapsed)
 		lastUpdate = lastUpdate + elapsed
@@ -160,18 +173,14 @@ do
 		if lastUpdate > 0.33 then
 			lastUpdate = 0
 			
-			local num = select("#", WorldFrame:GetChildren())
-			for i = 1, num do
-				local frame = select(i, WorldFrame:GetChildren())
-				
-				if isNamePlate(frame) then
-					if not frame.isStyled then
-						styleNamePlate(frame)
-					end
-					
-					updateThreat(frame)
-				end
-			end			
+			if numChildren ~= WorldFrame:GetNumChildren() then
+				numChildren = WorldFrame:GetNumChildren()
+				hookFrames( WorldFrame:GetChildren() )
+			end
+			
+			for frame in pairs(namePlates) do
+				updateThreat(frame)
+			end
 		end
 	end
 end
